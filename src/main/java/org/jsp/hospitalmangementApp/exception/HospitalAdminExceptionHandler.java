@@ -20,4 +20,16 @@ public class HospitalAdminExceptionHandler {
 		return new ResponseEntity<ResponseStructure<String>>(structure, HttpStatus.NOT_FOUND);
 
 	}
+	
+	@ExceptionHandler(AddressExceptions.class)
+	public ResponseEntity<ResponseStructure<String>> handleAdE(AddressExceptions addressExceptions) {
+
+		ResponseStructure<String> structure = new ResponseStructure<>();
+		structure.setData(addressExceptions.getMessage());
+		structure.setMessage("Address not found");
+		structure.setStatusCode(HttpStatus.NOT_FOUND.value());
+
+		return new ResponseEntity<ResponseStructure<String>>(structure, HttpStatus.NOT_FOUND);
+
+	}
 }
