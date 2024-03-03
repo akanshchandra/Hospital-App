@@ -20,7 +20,7 @@ public class HospitalAdminExceptionHandler {
 		return new ResponseEntity<ResponseStructure<String>>(structure, HttpStatus.NOT_FOUND);
 
 	}
-	
+
 	@ExceptionHandler(AddressExceptions.class)
 	public ResponseEntity<ResponseStructure<String>> handleAdE(AddressExceptions addressExceptions) {
 
@@ -32,4 +32,29 @@ public class HospitalAdminExceptionHandler {
 		return new ResponseEntity<ResponseStructure<String>>(structure, HttpStatus.NOT_FOUND);
 
 	}
+
+	@ExceptionHandler(BranchExceptions.class)
+	public ResponseEntity<ResponseStructure<String>> handleBdE(BranchExceptions branchExceptions) {
+
+		ResponseStructure<String> structure = new ResponseStructure<>();
+		structure.setData(branchExceptions.getMessage());
+		structure.setMessage("Branch not found");
+		structure.setStatusCode(HttpStatus.NOT_FOUND.value());
+
+		return new ResponseEntity<ResponseStructure<String>>(structure, HttpStatus.NOT_FOUND);
+
+	}
+
+	@ExceptionHandler(HospitalExceptions.class)
+	public ResponseEntity<ResponseStructure<String>> handleHdE(HospitalExceptions hospitalExceptions) {
+
+		ResponseStructure<String> structure = new ResponseStructure<>();
+		structure.setData(hospitalExceptions.getMessage());
+		structure.setMessage("Hospital not found");
+		structure.setStatusCode(HttpStatus.NOT_FOUND.value());
+
+		return new ResponseEntity<ResponseStructure<String>>(structure, HttpStatus.NOT_FOUND);
+
+	}
+
 }

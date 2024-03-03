@@ -9,32 +9,36 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
 @Entity
-public class Admin {
+public class Hospital {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@Column(nullable = false)
 	private String name;
-	@Column(nullable = false, unique = true)
-	private String email;
 	@Column(nullable = false)
-	private String password;
+	private int yoe;
 	@Column(nullable = false, unique = true)
-	private long phone;
-	@OneToMany(mappedBy = "admin")
-	@JsonIgnore
-	private List<Hospital> hospitals;
+	private String gst;
+	@ManyToOne
+	@JoinColumn(name = "admin_id")
+	private Admin admin;
 
-	public List<Hospital> getHospitals() {
-		return hospitals;
+	@OneToMany(mappedBy = "hospital")
+	@JsonIgnore
+	private List<Branch> branch;
+
+	public List<Branch> getBranch() {
+		return branch;
 	}
 
-	public void setHospitals(List<Hospital> hospitals) {
-		this.hospitals = hospitals;
+	public void setBranch(List<Branch> branch) {
+		this.branch = branch;
 	}
 
 	public int getId() {
@@ -53,27 +57,27 @@ public class Admin {
 		this.name = name;
 	}
 
-	public String getEmail() {
-		return email;
+	public int getYoe() {
+		return yoe;
 	}
 
-	public void setEmail(String email) {
-		this.email = email;
+	public void setYoe(int yoe) {
+		this.yoe = yoe;
 	}
 
-	public String getPassword() {
-		return password;
+	public String getGst() {
+		return gst;
 	}
 
-	public void setPassword(String password) {
-		this.password = password;
+	public void setGst(String gst) {
+		this.gst = gst;
 	}
 
-	public long getPhone() {
-		return phone;
+	public Admin getAdmin() {
+		return admin;
 	}
 
-	public void setPhone(long phone) {
-		this.phone = phone;
+	public void setAdmin(Admin admin) {
+		this.admin = admin;
 	}
 }

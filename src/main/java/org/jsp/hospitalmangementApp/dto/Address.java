@@ -1,10 +1,14 @@
 package org.jsp.hospitalmangementApp.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 
 @Entity
 public class Address {
@@ -26,6 +30,18 @@ public class Address {
 	private String landmark;
 	@Column(nullable = false)
 	private String building_name;
+	@OneToOne
+	@JoinColumn(name = "branch_id")
+	@JsonIgnore
+	private Branch branch;
+
+	public Branch getBranch() {
+		return branch;
+	}
+
+	public void setBranch(Branch branch) {
+		this.branch = branch;
+	}
 
 	public int getId() {
 		return id;

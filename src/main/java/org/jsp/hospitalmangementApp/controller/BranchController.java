@@ -2,7 +2,6 @@ package org.jsp.hospitalmangementApp.controller;
 
 import java.util.List;
 
-import org.jsp.hospitalmangementApp.dto.Address;
 import org.jsp.hospitalmangementApp.dto.Branch;
 import org.jsp.hospitalmangementApp.dto.ResponseStructure;
 import org.jsp.hospitalmangementApp.service.BranchService;
@@ -23,10 +22,10 @@ public class BranchController {
 	@Autowired
 	private BranchService branchService;
 	
-	@PostMapping
-	public ResponseEntity<ResponseStructure<Branch>> save(@RequestBody Branch branch) {
+	@PostMapping(value = "/{hospital_id}")
+	public ResponseEntity<ResponseStructure<Branch>> save(@RequestBody Branch branch,@PathVariable int hospital_id) {
 
-		return branchService.save(branch);
+		return branchService.save(branch, hospital_id);
 	}
 	
 	@PutMapping

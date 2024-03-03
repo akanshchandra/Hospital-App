@@ -23,10 +23,10 @@ public class AddressController {
 	@Autowired
 	private AddressService addressService;
 
-	@PostMapping
-	public ResponseEntity<ResponseStructure<Address>> save(@RequestBody Address address) {
+	@PostMapping(value = "/{branch_id}")
+	public ResponseEntity<ResponseStructure<Address>> save(@RequestBody Address address,@PathVariable int branch_id) {
 
-		return addressService.save(address);
+		return addressService.save(address,branch_id);
 	}
 	
 	@PutMapping

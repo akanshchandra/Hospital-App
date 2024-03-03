@@ -4,9 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.jsp.hospitalmangementApp.dao.AddressDao;
+import org.jsp.hospitalmangementApp.dao.BranchDao;
 import org.jsp.hospitalmangementApp.dto.Address;
+import org.jsp.hospitalmangementApp.dto.Branch;
 import org.jsp.hospitalmangementApp.dto.ResponseStructure;
 import org.jsp.hospitalmangementApp.exception.AddressExceptions;
+import org.jsp.hospitalmangementApp.exception.AdminExceptions;
+import org.jsp.hospitalmangementApp.exception.BranchExceptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,15 +21,29 @@ public class AddressService {
 
 	@Autowired
 	private AddressDao addressDao;
+	@Autowired
+	private BranchDao branchDao;
 
-	public ResponseEntity<ResponseStructure<Address>> save(Address address) {
+	public ResponseEntity<ResponseStructure<Address>> save(Address address, int branch_id) {
 
 		ResponseStructure<Address> structure = new ResponseStructure<>();
+		Optional<Branch> recBranch = branchDao.findById(branch_id);
+		
+		if(recBranch.isPresent()) {
+			
+			Branch branch = recBranch.get();
+			branch.setAddress(address);
+			
+			address.setBranch(branch);
+		
 		structure.setData(addressDao.save(address));
 		structure.setMessage("Address saved");
 		structure.setStatusCode(HttpStatus.CREATED.value());
 
 		return new ResponseEntity<ResponseStructure<Address>>(structure, HttpStatus.CREATED);
+		}
+		
+		throw new  BranchExceptions("Address not saved as branch id invalid");
 	}
 
 	public ResponseEntity<ResponseStructure<Address>> update(Address address) {

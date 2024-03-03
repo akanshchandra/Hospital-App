@@ -4,10 +4,13 @@ import java.util.List;
 import java.util.Optional;
 
 import org.jsp.hospitalmangementApp.dao.BranchDao;
+import org.jsp.hospitalmangementApp.dao.HospitalDao;
 import org.jsp.hospitalmangementApp.dto.Admin;
 import org.jsp.hospitalmangementApp.dto.Branch;
+import org.jsp.hospitalmangementApp.dto.Hospital;
 import org.jsp.hospitalmangementApp.dto.ResponseStructure;
 import org.jsp.hospitalmangementApp.exception.AdminExceptions;
+import org.jsp.hospitalmangementApp.exception.HospitalExceptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,14 +20,30 @@ import org.springframework.stereotype.Service;
 public class BranchService {
 	@Autowired
 	private BranchDao branchDao;
-	public ResponseEntity<ResponseStructure<Branch>> save(Branch admin) {
+	@Autowired
+	private HospitalDao hospitalDao;
 
+	public ResponseEntity<ResponseStructure<Branch>> save(Branch branch, int hospital_id) {
+
+		Optional<Hospital> recHospital = hospitalDao.findById(hospital_id);
+		
+		if(recHospital.isPresent()) {
+		
 		ResponseStructure<Branch> structure = new ResponseStructure<>();
-		structure.setData(branchDao.save(admin));
+		
+		Hospital hospital = recHospital.get();
+		
+		hospital.getBranch().add(branch);
+		branch.setHospital(hospital);
+		
+		structure.setData(branchDao.save(branch));
 		structure.setMessage("Branch saved");
 		structure.setStatusCode(HttpStatus.CREATED.value());
 
 		return new ResponseEntity<ResponseStructure<Branch>>(structure, HttpStatus.CREATED);
+		}
+		
+		throw new HospitalExceptions("Branch not saved as invalid hospital id ");
 	}
 
 	public ResponseEntity<ResponseStructure<Branch>> update(Branch branch) {
@@ -38,7 +57,6 @@ public class BranchService {
 			dbBranch.setName(branch.getName());
 			dbBranch.setEmail(branch.getEmail());
 			dbBranch.setPhone(branch.getPhone());
-			
 
 			structure.setData(branchDao.save(dbBranch));
 			structure.setMessage("Branch updated");
@@ -90,7 +108,7 @@ public class BranchService {
 		List<Branch> branch = branchDao.findAll();
 		ResponseStructure<List<Branch>> structure = new ResponseStructure<>();
 
-		if (branch.size()>0) {
+		if (branch.size() > 0) {
 
 			structure.setData(branch);
 			structure.setMessage("Admin details");
